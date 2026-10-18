@@ -49,7 +49,9 @@ final class TrayController: NSObject {
             status.$connection.map { _ in () }.eraseToAnyPublisher(),
             status.$awake.map { _ in () }.eraseToAnyPublisher(),
             status.$battery.map { _ in () }.eraseToAnyPublisher(),
-            status.$error.map { _ in () }.eraseToAnyPublisher()
+            status.$error.map { _ in () }.eraseToAnyPublisher(),
+            NotificationCenter.default.publisher(for: UserDefaults.didChangeNotification)
+                .map { _ in () }.eraseToAnyPublisher()
         )
         .receive(on: RunLoop.main)
         .sink { [weak self] in self?.render() }
@@ -57,6 +59,7 @@ final class TrayController: NSObject {
     }
 
     private func render() {
+        statusItem.isVisible = MenuBarPreference.isVisible
         guard let btn = statusItem.button else { return }
         btn.image = TrayIcon.image(for: iconState())
         btn.attributedTitle = title()
@@ -71,7 +74,8 @@ final class TrayController: NSObject {
     }
 
     private func title() -> NSAttributedString {
-        guard status.connection != .none, let pct = status.battery else {
+        guard MenuBarPreference.showsBatteryPercentage,
+              status.connection != .none, let pct = status.battery else {
             return NSAttributedString(string: "")
         }
         return NSAttributedString(string: " \(pct)%", attributes: [

@@ -305,6 +305,8 @@ struct DevicePane: View {
     /// `BSKV3XHS_DEBUG` (if set) overrides this at process start;
     /// see `Log.debugOverriddenByEnv`.
     @AppStorage(Log.debugPrefKey) private var debugLoggingEnabled = false
+    @AppStorage(MenuBarPreference.visibleKey) private var menuBarVisible = true
+    @AppStorage(MenuBarPreference.batteryKey) private var menuBarBatteryPercentage = true
 
     private var connectionLabel: String {
         switch status.connection {
@@ -334,6 +336,17 @@ struct DevicePane: View {
             InfoRow("Connection", connectionLabel)
         }
         Card(title: "Preferences") {
+            Toggle("Show in menu bar", isOn: $menuBarVisible)
+                .font(.system(size: 13, weight: .medium))
+                .toggleStyle(.switch)
+            Text("When hidden, open BSK V3 X HS again from Finder or Spotlight to access this panel.")
+                .font(.system(size: 11)).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+            Toggle("Show battery percentage", isOn: $menuBarBatteryPercentage)
+                .font(.system(size: 13, weight: .medium))
+                .toggleStyle(.switch)
+                .disabled(!menuBarVisible)
+            Divider().opacity(0.4).padding(.vertical, 4)
             Toggle(isOn: Binding(
                 get: { loginItem.isEnabled },
                 set: { loginItem.setEnabled($0) }

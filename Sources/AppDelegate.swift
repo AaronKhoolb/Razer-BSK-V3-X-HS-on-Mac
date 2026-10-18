@@ -27,6 +27,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         deviceController.start()
     }
 
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        panelController?.toggle(anchor: nil)
+        return false
+    }
+
     // MARK: - Main menu (Cmd-Q, copy/paste in text fields, etc.)
 
     private func installMainMenu() {

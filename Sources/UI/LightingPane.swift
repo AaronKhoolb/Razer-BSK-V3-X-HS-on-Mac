@@ -8,11 +8,15 @@ import AppKit
 
 struct LightingPane: View {
     @Binding var draft: AppSettings
+    @State private var lastEnabledEffect: LightingEffect = .spectrum
 
     private var mode: LightingEffect.Mode {
         get { draft.lighting.effect.mode }
     }
     private func setMode(_ m: LightingEffect.Mode) {
+        if m == .off, mode != .off {
+            lastEnabledEffect = draft.lighting.effect
+        }
         // Preserve any existing color/direction/speed when switching modes so
         // toggling between Static ↔ Breath ↔ Reactive keeps the palette pick.
         let color = currentColor ?? .razerGreen
@@ -53,6 +57,20 @@ struct LightingPane: View {
 
     var body: some View {
         Card(title: "Effect") {
+            Toggle("Scroll wheel light", isOn: Binding(
+                get: { mode != .off },
+                set: { enabled in
+                    if enabled {
+                        draft.lighting.effect = lastEnabledEffect
+                    } else {
+                        setMode(.off)
+                    }
+                }
+            ))
+            .font(.system(size: 13, weight: .medium))
+            .toggleStyle(.switch)
+            Divider().padding(.vertical, 6)
+
             Picker("", selection: Binding(
                 get: { mode },
                 set: { setMode($0) }
@@ -99,6 +117,7 @@ struct LightingPane: View {
                     set: { draft.lighting.brightness = Int($0.rounded()) }
                 ), in: 0...100,
                        onEditingChanged: SliderCommitCoordinator.editingChanged)
+                .disabled(mode == .off)
             }
             Text("Applies to the scroll wheel LED (the only light on this mouse).")
                 .font(.system(size: 11)).foregroundStyle(.secondary).padding(.top, 4)

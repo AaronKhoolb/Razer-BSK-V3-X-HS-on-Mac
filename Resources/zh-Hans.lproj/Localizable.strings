@@ -218,6 +218,7 @@
 "Go to a specific stage" = "跳到指定档位";
 
 /* ─── Lighting pane ───────────────────────────────────────────── */
+"Scroll wheel light" = "滚轮灯光";
 "Effect" = "灯效";
 "Brightness" = "亮度";
 "Color" = "颜色";
@@ -421,3 +422,7 @@
 "Terminal automation blocked. Enable it in System Settings → Privacy & Security → Automation." = "“终端”自动化权限已被拒绝。请在系统设置 → 隐私与安全性 → 自动化中启用。";
 "Terminal launch failed. See log for details." = "启动“终端”失败，详情见日志。";
 
+/* ─── Menu bar preferences ────────────────────────────────────── */
+"Show in menu bar" = "在菜单栏中显示";
+"Show battery percentage" = "显示电池百分比";
+"When hidden, open BSK V3 X HS again from Finder or Spotlight to access this panel." = "隐藏后，可从访达或聚焦搜索再次打开 BSK V3 X HS 来访问此面板。";
